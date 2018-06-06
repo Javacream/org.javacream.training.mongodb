@@ -18,14 +18,14 @@ function doRoomsMapReduce(){
 	db.rooms.mapReduce(function(){
 		emit(this.style, this.capacity)
 		emit("total", this.capacity)
-	}, 
-	
+	},
+
 	function(key, values){
 		var result = 0
 		for (var i = 0; i < values.length; i++){
 			result += values[i]
 		}
-		
+
 		return result
-	}, {out: "rooms_result"})
+	}, {out: {inline:1}})
 }

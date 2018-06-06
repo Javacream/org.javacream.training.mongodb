@@ -9,7 +9,7 @@ function createData() {
 
 	for ( var i = 0; i < publishersCount; i++) {
 		var publisher = {
-			_id: "pub" + i,	
+			_id: "pub" + i,
 			name : 'Publisher' + i,
 			address : {
 				city : 'PublisherCity' + i,
@@ -23,7 +23,7 @@ function createData() {
 
 	for ( var i = 0; i < booksCount; i++) {
 		var book = {
-			_id: "book" + i,	
+			_id: "book" + i,
 			isbn : 'Isbn' + i,
 			title : 'Title' + i,
 			price : 9.99 + i,
@@ -42,7 +42,7 @@ function createData() {
 
 	for ( var i = 0; i < authorsCount; i++) {
 		var author = {
-			_id: "author" + i,	
+			_id: "author" + i,
 			lastname : 'AuthorLastname' + i,
 			firstname : 'AuthorFirstname' + i,
 			books : []
@@ -93,10 +93,10 @@ function createData() {
 }
 
 function clearData(){
-	db.publishers.remove();
-	db.authors.remove();
-	db.books.remove();
-	
+	db.publishers.remove({});
+	db.authors.remove({});
+	db.books.remove({});
+
 }
 
 function testRelation(){
@@ -109,20 +109,3 @@ function testRelationAuthors(){
 	var book = db.books.findOne({isbn: 'Isbn123'})
 	return db[book.authors[0].$ref].findOne({_id:book.authors[0].$id})
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
