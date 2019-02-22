@@ -73,7 +73,7 @@ function findPublisherWithMatchingBookTitle(title){
 	return db.publishing.find({'books.title': title} , {name: 1})
 }
 
-//e.g. /Title[0-5]
+//e.g. /Title[0-5]/
 function findPublisherWithMatchingBookTitleUsingRegex(ex){
 	return db.publishing.find({'books.title': ex} , {name: 1})
 }

@@ -1,5 +1,10 @@
 var firstMongo = function(){
-	db.people.insert({lastname : "Sawitzki",givenNames : [ "Rainer", "Ulrich" ]})
+	var person = {}
+	person.lastname= "Sawitzki"
+	person.givenNames = [];
+	person.givenNames[0] = "Rainer"
+	person.givenNames[1] = "Ulrich"
+	db.people.insert(person)
 	print (db.people.find())
 }
 
