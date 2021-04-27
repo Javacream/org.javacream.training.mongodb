@@ -3,6 +3,12 @@ function setUp(){
     let conn = new Mongo()
     return conn.getDB("publishing")
 }
+
+function tearDown(db){
+    db.publishers.drop()
+    db.books.drop()
+
+}
 function publishersExample(){
     let db = setUp()
     let publisher1 = {name: "Springer", address: {city:"Berlin", street: "Alexanderplatz"}}
@@ -16,6 +22,7 @@ function publishersExample(){
     db.publishers.find({name:"Springer"}).forEach(printjson)
     db.publishers.find({phone:null}).forEach(printjson)
     db.publishers.find({phone: {$ne: null}}).forEach(printjson)
+    tearDown(db)
 }
 
 
