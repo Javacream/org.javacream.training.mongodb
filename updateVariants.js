@@ -18,7 +18,7 @@ function updateOneDemo(){
 function findAndUpdateOneDemo(){
     print("findOneAndUpdate returns original document")
     printjson(db.data.findOneAndUpdate({_id:1}, {$inc: {value: 1}}))
-    print("findOneAndUpdate returns original document if option returnNewDocument is set")
+    print("findOneAndUpdate returns updated document if option returnNewDocument is set")
     printjson(db.data.findOneAndUpdate({_id:1}, {$inc: {value: 1}}, {"returnNewDocument": true}))
 
 }

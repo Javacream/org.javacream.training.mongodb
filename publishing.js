@@ -85,6 +85,12 @@ function bookAggregateExample1(){
     const pipeline = [match, sort, limit, project]
     printCursor(db.books.aggregate(pipeline))
 }
+function bookAggregateExample2(){
+    const match = {$match: {price: {$gt: 20}}}
+    const project = {$project: {_id: 0, title: 1, price:1, avgStars: {$avg: "$comments.stars"}}}
+    const pipeline = [match, project]
+    printCursor(db.books.aggregate(pipeline))
+}
 
 function booksCommentsExample(){
     let db = getDb()
