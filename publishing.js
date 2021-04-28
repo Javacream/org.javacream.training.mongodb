@@ -107,6 +107,12 @@ function publisherAggregateLookupExample(){
     printCursor(db.publishers.aggregate(pipeline))
 }
 
+function publisherClientJoin(){
+    let result = db.publishers.findOne({name:"Springer"})
+    let isbns = result.books
+    let books = db.books.find({isbn: {$in: isbns}})
+    printCursor(books)
+}
 
 function booksCommentsExample(){
     let db = getDb()
