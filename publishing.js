@@ -8,8 +8,6 @@ function setUpPublishing(){
     let db = getDb()
     let publisher1 = {name: "Springer", address: {city:"Berlin", street: "Alexanderplatz"}}
     let publisher2 = {name: "Addison", address: {city:"New York", street: "Central Park"}}
-    db.publishers.insertOne(publisher1)
-    db.publishers.insertOne(publisher2)
     const books = []
 
     const tags1 = ["computer", "it", "databases"]
@@ -29,7 +27,7 @@ function setUpPublishing(){
         }
 
         books.push(book)
-    }
+        }
 
     books[5].publishingDate = new Date()
     books[3].inStock = true
@@ -43,6 +41,10 @@ function setUpPublishing(){
 
     db.authors.insertOne({lastname:"Sawitzki", firstname:"Rainer", email: ["training@rainer-sawitzki.de"]})
     db.authors.insertOne({lastname:"Meier", firstname:"Frida", email: ["frida@meier.com"]})
+
+    publisher1.books = books.map(book => book.isbn)
+    db.publishers.insertOne(publisher1)
+    db.publishers.insertOne(publisher2)
 }
 
 function tearDownPublishing(){
@@ -91,6 +93,20 @@ function bookAggregateExample2(){
     const pipeline = [match, project]
     printCursor(db.books.aggregate(pipeline))
 }
+
+function publisherAggregateLookupExample(){
+    const match = {$match: {name: "Springer"}}
+    const lookup = {$lookup: {
+        from: "books", 
+        localField: "books",
+        foreignField: "isbn",
+        as: "book"
+    }}
+    const project = {$project: {_id: 0, name: 1, "book.title": 1, "book.price": 1}}
+    const pipeline = [match, lookup, project]
+    printCursor(db.publishers.aggregate(pipeline))
+}
+
 
 function booksCommentsExample(){
     let db = getDb()
