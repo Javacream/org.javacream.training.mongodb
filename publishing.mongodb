@@ -1,0 +1,14 @@
+use('publishing');
+db.data.drop()
+let result = db.data.insertMany([{name:"Springer"}, {isbn:"ISBN1", title:"Title1", price: 19.99}, {isbn:"ISBN2", title:"Title2", price: 9.99}, {lastname: "Meier", firstname: "Hans"}, {type:"CD", name: "Abbey Road"}])
+let ids = result.insertedIds
+let springerId = ids["0"]
+let book1Id = ids["1"]
+let book2Id = ids["2"]
+let authorId = ids["3"]
+let productId = ids["4"]
+db.data.find(springerId)
+db.data.find(book1Id)
+db.data.find(productId)
+db.data.find({name: "Abbey Road"})
+
