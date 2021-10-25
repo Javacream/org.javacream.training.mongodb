@@ -32,10 +32,15 @@ function searchBooksByTitleRegex(){
     return db.books.find({title: {"$regex": "^H"}})
 }
 
+function updatePrices(){
+    db.books.updateMany({isbn: "ISBN5"}, {$set: {price: 1000}, $set: {keywords: ["training", "computer"]}})
+}
 function main(){
-    clean()
-    setUp()
-    return searchBooksByTitleRegex()
+    //clean()
+    //setUp()
+    //return searchBooksByTitleRegex()
+    updatePrices()
+    return db.books.find({isbn: "ISBN5"})
 }
 
 main()
