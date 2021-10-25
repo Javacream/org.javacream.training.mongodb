@@ -1,0 +1,5 @@
+use('training');
+
+//const person = {"lastname": "Sawitzki", "firstnames": ["Rainer", "Ulrich"]}
+//db.training.insertOne(person)//Nebeneffekt: Das eindeutige Id-Attribut wird automatisch dem Dokument hinzugefügt
+db.training.insertOne({hugo: 42})
