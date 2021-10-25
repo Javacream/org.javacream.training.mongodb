@@ -12,7 +12,7 @@ function setUp(){
             books.push(book)
     }
     const book = {isbn: "ISBN42", title: "Hugo", price:9.99, pages: 100}
-
+    books.push(book)
     db.books.insertMany(books)
 }
 
