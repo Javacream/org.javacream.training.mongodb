@@ -70,6 +70,12 @@ function findBooksWithoutTags(){
 
 }
 
+function findBooksWithJavaSections(){
+    printCursor(db.books.find({sections: /Java/}))
+
+}
+
+
 function findByTagsAndSlice(){
     const query = {tags:{"$all": ["computer", "databases"]}}
     const projection = {"tags": {"$slice": 1}}
@@ -79,7 +85,7 @@ function findByTagsAndSlice(){
 function main(){
     //clean()
     //setUp()
-    findBooksWithoutTags()
+    findBooksWithJavaSections()
 
     return "OK"
 }
