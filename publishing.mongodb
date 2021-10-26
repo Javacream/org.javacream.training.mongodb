@@ -5,6 +5,11 @@ function clean(){
 }
 
 function setUp(){
+    const publisher1 = {name: "Springer", address: {city:"Berlin", street: "Alexanderplatz"}}
+    const publisher2 = {name: "Addison", address: {city:"New York", street: "Central Park"}}
+
+    db.publishers.insertOne(publisher1)
+    db.publishers.insertOne(publisher2)
 
     const books = []
     const tags1 = ["computer", "it", "databases"]
@@ -99,18 +104,13 @@ function booksWith4StarsComments(){
     printCursor(db.books.find({"comments.stars": {$gt: 3}}))
 }
 
-
+function findBerlinPublishers(){
+    printCursor(db.publishers.find({"publisher.city": "Berlin"}))
+}
 function main(){
     clean()
     setUp()
-    console.log("booksWithComments")
-    booksWithComments()
-    console.log("booksWithSpecialComment")
-    booksWithSpecialComment()
-    console.log("booksWith4StarsComments")
-    booksWith4StarsComments()
-    console.log("booksWithCommentsFromHugo")
-    booksWithCommentsFromHugo()
+    findBerlinPublishers()
     return "OK"
 }
 
