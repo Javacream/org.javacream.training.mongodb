@@ -148,12 +148,25 @@ function publisherAggregateLookupExample(){
     const pipeline = [match, lookup, project]
     printCursor(db.publishers.aggregate(pipeline))
 }
+function booksAggregateLookupExample(){
+    const match = {$match: {isbn: "ISBN1"}}
+    const lookup = {$lookup: {
+        from: "authors", 
+        localField: "authors",
+        foreignField: "_id",
+        as: "authorList"
+    }}
+    const project = {$project: {_id: 0, isbn: 1, title: 1, price: 1, authors: 1, authorList:1}}
+    const pipeline = [match, lookup, project]
+    printCursor(db.books.aggregate(pipeline))
+}
+
 
 function main(){
     //clean()
     //setUp()
     //booksAggregateSample()
-    publisherAggregateLookupExample()
+    booksAggregateLookupExample()
     return "OK"
 }
 
