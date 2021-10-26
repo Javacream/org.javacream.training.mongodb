@@ -3,15 +3,17 @@ use('publishing');
 function clean(){
     db.books.drop()
     db.publishers.drop()
+    db.authors.drop()
 }
 
 function setUp(){
     const publisher1 = {name: "Springer", address: {city:"Berlin", street: "Alexanderplatz"}}
     const publisher2 = {name: "Addison", address: {city:"New York", street: "Central Park"}}
 
-    db.publishers.insertOne(publisher1)
-    db.publishers.insertOne(publisher2)
-
+    const author1 = {lastname: "Meier", firstname: "Hans"}
+    const author2 = {lastname: "Schneider", firstname: "Maria"}
+    const author1Id = db.authors.insertOne(author1)
+    const author2Id = db.authors.insertOne(author2)
     const books = []
     const tags1 = ["computer", "it", "databases"]
     const tags2 = ["school", "geography"]
@@ -20,12 +22,16 @@ function setUp(){
         const book = {isbn: "ISBN" + i, title: "Title"+i, price:9.99*i, pages: 100*i}
         if (i%3 == 0){
             book.tags = tags1
+            book.authors = [author1Id]
         }
         if (i%3 == 1){
             book.tags = tags2
+            book.authors = [author2Id]
         }
         if (i%3 == 2){
             book.tags = tags3
+            book.authors = [author1Id, author2Id]
+
         }
 
         books.push(book)
@@ -36,10 +42,16 @@ function setUp(){
     books[3].sections = ["Holidays in the sun", "Java Island"]
     books[2].comments = [{commenter: "hugo", comment: "great", stars:5}, {commenter: "emil", comment: "not so great", stars:2}]
     books[4].comments = [{commenter: "hugo", comment: "nonsense", stars:1}, {commenter: "emil", comment: "not so great", stars:2}, {commenter: "fritz", comment: "ok", stars:3}]
+    books[3].image="https://www.tagesspiegel.de/images/files-in-this-file-photo-taken-on-february-4-2019-lead-actress-nominee-for-a-star-is-born-and-original-song-nominee-for-shallow-from-a-star-is-born-singer-songwriter-lady-gaga-arrives-for-the-91st-oscars-nominees-luncheon-at-the-beverly-hilton-hotel-in-beverly-hills-lady-gagas-two-frenc/26958224/1-format6001.jpg"
 
     const book = {isbn: "ISBN42", title: "Hugo", price:9.99, pages: 100}
     books.push(book)
-    db.books.insertMany(books)
+    let booksInsert = db.books.insertMany(books)
+    publisher1.books = {refs: booksInsert.insertedIds, collection: "books"};
+    printObject(booksInsert.insertedIds)
+//    publisher1.books.push({url: "https://www.amazon.de/Factfulness-Reasons-Wrong-Things-Better/dp/1473637465/ref=sr_1_2?dchild=1&keywords=factfulness&qid=1635248483&qsid=262-0339835-1941864&sprefix=Factful%2Caps%2C94&sr=8-2&sres=3548060412%2C1473637465%2CB093B23B3K%2C2081427117%2C8423429962%2C8380084993%2C9000355028%2C8416863482%2C8817099635%2CB07K43G612%2CB07FPQ2LD9%2C1847941834%2CB099BWLFVS%2CB08RRDTDQQ%2C1408898950%2CB07GGLD157&srpt=ABIS_BOOK"})
+    db.publishers.insertOne(publisher1)
+    db.publishers.insertOne(publisher2)
 }
 
 function searchAllBooks(){
@@ -62,8 +74,10 @@ function searchBooksByTitleRegex(){
 }
 
 function updatePrices(){
-        db.books.updateMany({isbn: "ISBN5"}, {$set: {price: 1000}, $set: {keywords: ["training", "computer"]}})
+        db.books.updateMany({isbn: "ISBN5"}, {$set: {price: 1000}, $set: {tags: ["computer", "sports"]}})
+        printCursor(db.books.find({isbn: "ISBN5"}))
 }
+
 
 function findByTagComputer(){
     printCursor(db.books.find({tags: "computer"}))
@@ -109,9 +123,9 @@ function findBerlinPublishers(){
     printCursor(db.publishers.find({"address.city": "Berlin"}))
 }
 function main(){
-    clean()
-    setUp()
-    findBerlinPublishers()
+    //clean()
+    //setUp()
+    updatePrices()
     return "OK"
 }
 
