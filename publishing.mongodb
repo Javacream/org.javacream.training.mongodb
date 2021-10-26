@@ -2,6 +2,7 @@ use('publishing');
 
 function clean(){
     db.books.drop()
+    db.publishers.drop()
 }
 
 function setUp(){
@@ -105,7 +106,7 @@ function booksWith4StarsComments(){
 }
 
 function findBerlinPublishers(){
-    printCursor(db.publishers.find({"publisher.city": "Berlin"}))
+    printCursor(db.publishers.find({"address.city": "Berlin"}))
 }
 function main(){
     clean()
