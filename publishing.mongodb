@@ -125,10 +125,21 @@ function booksWith4StarsComments(){
 function findBerlinPublishers(){
     printCursor(db.publishers.find({"address.city": "Berlin"}))
 }
+
+
+function booksAggregateSample(){
+    const match = {$match: {price: {$lt: 35}}}
+    const sort = {$sort: {price:1}}
+    const limit = {$limit: 5}
+    const projection = {$project: {_id:0, title:1, stars:"$comment.stars"}}
+    const pipeline = [match, sort, limit, projection]
+    printCursor(db.books.aggregate(pipeline))
+}
+
 function main(){
     clean()
     setUp()
-    updatePrices()
+    booksAggregateSample()
     return "OK"
 }
 
