@@ -5,12 +5,29 @@ function clean(){
 }
 
 function setUp(){
+
     const books = []
+    const tags1 = ["computer", "it", "databases"]
+    const tags2 = ["school", "geography"]
+    const tags3 = ["sports"]
     for (let i = 0; i < 10; i++){
-            const book = {isbn: "ISBN" + i, title: "Title"+i, price:9.99*i, pages: 100*i}
-            books.available = i%2
-            books.push(book)
-    }
+        const book = {isbn: "ISBN" + i, title: "Title"+i, price:9.99*i, pages: 100*i}
+        if (i%3 == 0){
+            book.tags = tags1
+        }
+        if (i%3 == 1){
+            book.tags = tags2
+        }
+        if (i%3 == 2){
+            book.tags = tags3
+        }
+
+        books.push(book)
+        }
+
+    books[0].sections = ["Introduction", "The Java programming language", "JEE"]
+    books[3].sections = ["Cooking is easy", "Advanced Tea", "Advanced coffee using Java"]
+    books[3].sections = ["Holidays in the sun", "Java Island"]
     const book = {isbn: "ISBN42", title: "Hugo", price:9.99, pages: 100}
     books.push(book)
     db.books.insertMany(books)
@@ -36,14 +53,34 @@ function searchBooksByTitleRegex(){
 }
 
 function updatePrices(){
-    db.books.updateMany({isbn: "ISBN5"}, {$set: {price: 1000}, $set: {keywords: ["training", "computer"]}})
+        db.books.updateMany({isbn: "ISBN5"}, {$set: {price: 1000}, $set: {keywords: ["training", "computer"]}})
+}
+
+function findByTagComputer(){
+    printCursor(db.books.find({tags: "computer"}))
+
+}
+function findByTagSportAndPrice(){
+    printCursor(db.books.find({price: {$gt: 50}, tags: "sports"}))
+
+}
+
+function findBooksWithoutTags(){
+    printCursor(db.books.find({tags: {$exists: false}}))
+
+}
+
+function findByTagsAndSlice(){
+    const query = {tags:{"$all": ["computer", "databases"]}}
+    const projection = {"tags": {"$slice": 1}}
+    printCursor(db.books.find( query, projection))
+
 }
 function main(){
     //clean()
     //setUp()
-    searchBooksByMaxPrice()
-    console.log("_____")
-    searchBooksByMaxPriceWithProjection()
+    findBooksWithoutTags()
+
     return "OK"
 }
 
