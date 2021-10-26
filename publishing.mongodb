@@ -17,19 +17,22 @@ function setUp(){
 }
 
 function searchAllBooks(){
-    return db.books.find()
+    printCursor(db.books.find())
 }
 function searchBooksByMinPrice(){
-    return db.books.find({price: {"$gt": 30}})
+    printCursor(db.books.find({price: {"$gt": 30}}))
 }
 function searchBooksByMaxPrice(){
-    return db.books.find({price: {"$lt": 30}})
+    printCursor(db.books.find({price: {"$lt": 30}}))
+}
+function searchBooksByMaxPriceWithProjection(){
+    printCursor(db.books.find({price: {"$lt": 30}}, {_id:0, title:1, price:1}))
 }
 function searchBooksByPriceRange(){
-    return db.books.find({price: {"$lt": 30, "$gt": 10}})
+    printCursor(db.books.find({price: {"$lt": 30, "$gt": 10}}))
 }
 function searchBooksByTitleRegex(){
-    return db.books.find({title: {"$regex": "^H"}})
+    printCursor(db.books.find({title: {"$regex": "^H"}}))
 }
 
 function updatePrices(){
@@ -38,9 +41,17 @@ function updatePrices(){
 function main(){
     //clean()
     //setUp()
-    //return searchBooksByTitleRegex()
-    updatePrices()
-    return db.books.find({isbn: "ISBN5"})
+    searchBooksByMaxPrice()
+    console.log("_____")
+    searchBooksByMaxPriceWithProjection()
+    return "OK"
+}
+
+function printCursor(cursor){
+    cursor.forEach((e) => console.log(JSON.stringify(e)))
+}
+function printObject(obj){
+    console.log(JSON.stringify(obj))
 }
 
 main()
