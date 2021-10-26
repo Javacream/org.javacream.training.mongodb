@@ -28,6 +28,9 @@ function setUp(){
     books[0].sections = ["Introduction", "The Java programming language", "JEE"]
     books[3].sections = ["Cooking is easy", "Advanced Tea", "Advanced coffee using Java"]
     books[3].sections = ["Holidays in the sun", "Java Island"]
+    books[2].comments = [{commenter: "hugo", comment: "great", stars:5}, {commenter: "emil", comment: "not so great", stars:2}]
+    books[4].comments = [{commenter: "hugo", comment: "nonsense", stars:1}, {commenter: "emil", comment: "not so great", stars:2}, {commenter: "fritz", comment: "ok", stars:3}]
+
     const book = {isbn: "ISBN42", title: "Hugo", price:9.99, pages: 100}
     books.push(book)
     db.books.insertMany(books)
@@ -82,11 +85,32 @@ function findByTagsAndSlice(){
     printCursor(db.books.find( query, projection))
 
 }
-function main(){
-    //clean()
-    //setUp()
-    findBooksWithJavaSections()
 
+function booksWithComments(){
+    printCursor(db.books.find({comments: {$exists: true}}))
+}
+function booksWithSpecialComment(){
+    printCursor(db.books.find({comments: {commenter: "hugo", comment: "great", stars:5}}))
+}
+function booksWithCommentsFromHugo(){
+    printCursor(db.books.find({comments: {$elemMatch: {commenter: "hugo"}}}))
+}
+function booksWith4StarsComments(){
+    printCursor(db.books.find({"comments.stars": {$gt: 3}}))
+}
+
+
+function main(){
+    clean()
+    setUp()
+    console.log("booksWithComments")
+    booksWithComments()
+    console.log("booksWithSpecialComment")
+    booksWithSpecialComment()
+    console.log("booksWith4StarsComments")
+    booksWith4StarsComments()
+    console.log("booksWithCommentsFromHugo")
+    booksWithCommentsFromHugo()
     return "OK"
 }
 
