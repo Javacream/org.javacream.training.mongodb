@@ -51,7 +51,10 @@ function setUp(){
 //    publisher1.books.push({url: "https://www.amazon.de/Factfulness-Reasons-Wrong-Things-Better/dp/1473637465/ref=sr_1_2?dchild=1&keywords=factfulness&qid=1635248483&qsid=262-0339835-1941864&sprefix=Factful%2Caps%2C94&sr=8-2&sres=3548060412%2C1473637465%2CB093B23B3K%2C2081427117%2C8423429962%2C8380084993%2C9000355028%2C8416863482%2C8817099635%2CB07K43G612%2CB07FPQ2LD9%2C1847941834%2CB099BWLFVS%2CB08RRDTDQQ%2C1408898950%2CB07GGLD157&srpt=ABIS_BOOK"})
     const publisher1Id = db.publishers.insertOne(publisher1).insertedId
     db.publishers.insertOne(publisher2)
-    db.books.updateMany({}, {$set: {publisher: publisher1Id}})
+    db.books.updateMany({}, {$set: {publisher: {ref: publisher1Id, collection:"publishers"}}})
+    const booksToUpdate = db.books.find()
+    booksToUpdate.forEach(book =>
+    db.authors.updateMany({_id: {$in: book.authors}}, {books: {$push: book._id}}))
 }
 
 function searchAllBooks(){
