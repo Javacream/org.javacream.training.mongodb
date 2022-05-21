@@ -14,7 +14,7 @@
 
 * Beispiele
   * https://github.com/Javacream/org.javacream.training.mongodb
-    * Branch integrata_26.4.2021
+    * Branch vkb_24.5.2022
 
 * Digitales Flipchart
-  * https://docs.google.com/presentation/d/1wAv1mOG-5Kr3ugS9HsBLnKeP_OiDUWm2Qd04Nx2ubto/edit?usp=sharing
+  * [zum Dokument](https://docs.google.com/presentation/d/1dwMtVMGFgVZm1pGE0W02dVVRKhteg1camjWADgwtGT4/edit?usp=sharing)
