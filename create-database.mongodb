@@ -1,0 +1,6 @@
+const database = 'training';
+const collection = 'publishing';
+use(database);
+//Falls die database nicht exisitiert wird diese angelegt
+//Nebeneffekt: die Variable "db" hat nun einen Wert
+db.createCollection(collection);
