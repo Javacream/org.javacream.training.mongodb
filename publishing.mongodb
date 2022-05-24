@@ -1,15 +1,15 @@
-function createBooksData(){
+function createPublishers(){
+    let springer = {name: "Springer", books: []}
     for (let i = 0; i < 10; i++){
         let book = {isbn: "ISBN"+i, title: "Title" + i, price: 0.99 * i}
-        db.publishing.insertOne(book)
+        springer.books[i] = book
     }
+    let addison = {name: "Addison", books: [{isbn: "ISBN42", title: "Title42", price: 42.99}]}
+    db.publishing.insertOne(springer)
+    db.publishing.insertOne(addison)
 
 }
 use ("training")
 db.publishing.drop()
 db.createCollection("publishing")
-createBooksData()
-db.publishing.insertOne({lastname: "Sawitzki", firstname: "Rainer"})
-//let condition = {$lt: 6}
-//db.publishing.find({price: condition})
-db.publishing.find({price: {$lt: 6}})
+createPublishers()
