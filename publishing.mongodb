@@ -1,0 +1,11 @@
+function createBooksData(){
+    for (let i = 0; i < 10; i++){
+        let book = {isbn: "ISBN"+i, title: "Title" + i, price: 0.99 * i}
+        db.publishing.insertOne(book)
+    }
+
+}
+use ("training")
+db.publishing.drop()
+db.createCollection("publishing")
+createBooksData()
