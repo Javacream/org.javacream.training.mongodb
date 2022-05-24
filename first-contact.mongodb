@@ -1,0 +1,4 @@
+use("training")
+let book ={isbn:"ISBN1", title:"Title"}
+db.publishing.insertOne(book)
+
