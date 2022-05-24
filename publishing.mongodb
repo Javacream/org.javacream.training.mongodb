@@ -9,3 +9,7 @@ use ("training")
 db.publishing.drop()
 db.createCollection("publishing")
 createBooksData()
+db.publishing.insertOne({lastname: "Sawitzki", firstname: "Rainer"})
+//let condition = {$lt: 6}
+//db.publishing.find({price: condition})
+db.publishing.find({price: {$lt: 6}})
