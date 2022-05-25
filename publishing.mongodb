@@ -16,9 +16,10 @@ function findBooks(){
 function findPublishers(){
     return db.publishing.find({name: {$exists: true}})
 }
+function findAuthors(){
+    return db.publishing.find({lastname: {$exists: true}})
+}
 
 
-let documents = findPublishers()
-
-printCursor(documents)
-
+let book = db.publishing.findOne({isbn: "ISBN1"}, {authorNames: 1})
+printData(book)
