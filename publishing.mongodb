@@ -20,6 +20,21 @@ function findAuthors(){
     return db.publishing.find({lastname: {$exists: true}})
 }
 
+function publisherBooksLookup(){
+    const match = {$match: {name: "Addison"}}
+    const lookup = {$lookup: {
+        from: "books",
+        as: "book",
+        localField: "books.oids",
+        foreignField: "_id"
+        }
+    }
+    const projection = {$project: {
+        _id: 0, name:1, "book.title": 1, "book.price":1
+        }
+    }
+    const pipeline = [match, lookup, projection]
+    return db.publishers.aggregate(pipeline)
+}
 
-let book = db.publishing.findOne({isbn: "ISBN1"}, {authorNames: 1})
-printData(book)
+printCursor(publisherBooksLookup())

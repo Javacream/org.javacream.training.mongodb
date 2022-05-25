@@ -5,6 +5,7 @@ function createDocuments(){
         books.push(book)
     }
     let bookForAddison = {isbn: "ISBN42", title: "Title42", price: 42.99, pages: 999, description: "a sports book", authorName: ["Georg Metzger", "Hans Meier"]};
+    let bookForAddison2 = {isbn: "ISBN43", title: "Title43", price: 4.99, pages: 999, description: "a sports book", authorName: ["Georg Metzger", "Hans Meier"]};
     let springer = {name: "Springer", address: {city: "Berlin", street: "Alexanderplatz"}, books: []}
     let authors = [{lastname: "Sawitzki", firstname: "Rainer", isbns:[]}, {lastname: "Metzger", firstname: "Georg", isbns:[]}, {lastname: "Meier", firstname: "Hans", isbns:[]}]
     authors[1].isbns.push(bookForAddison.isbn)
@@ -12,10 +13,14 @@ function createDocuments(){
     books.forEach(e => {springer.books.push(e.isbn); e.publisherName = springer.name; authors[0].isbns.push(e.isbn)})
     let addison = {name: "Addison", address: {city: "Berlin", street: "Alexanderplatz"}, books: [bookForAddison]}
     bookForAddison.publisherName = addison.name;    
-    books.push(bookForAddison)
+    bookForAddison2.publisherName = addison.name;    
+    //books.push(bookForAddison)
+    let oidsForSpringerBooks = db.books.insertMany(books)
+    let oidForAddisonBook = db.books.insertMany([bookForAddison, bookForAddison2])
+    springer.books = {oids: Object.values(oidsForSpringerBooks.insertedIds)}
+    addison.books.push({oids: Object.values(oidForAddisonBook.insertedIds)})
     db.publishers.insertOne(springer)
     db.publishers.insertOne(addison)
-    db.books.insertMany(books)
     db.authors.insertMany(authors)
 
 }
