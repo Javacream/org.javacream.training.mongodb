@@ -1,0 +1,16 @@
+function createDocuments(){
+    let springer = {name: "Springer", books: []}
+    for (let i = 0; i < 10; i++){
+        let book = {isbn: "ISBN"+i, title: "Title" + i, price: 0.99 * i, pages: 50*i}
+        springer.books[i] = book
+    }
+    let addison = {name: "Addison", books: [{isbn: "ISBN42", title: "Title42", price: 42.99}]}
+    db.publishing.insertOne(springer)
+    db.publishing.insertOne(addison)
+    db.publishing.insertMany(springer.books)
+    db.publishing.insertMany(addison.books)
+}
+use ("training")
+db.publishing.drop()
+db.createCollection("publishing")
+createDocuments()

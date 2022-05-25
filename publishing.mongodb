@@ -1,15 +1,16 @@
-function createPublishers(){
-    let springer = {name: "Springer", books: []}
-    for (let i = 0; i < 10; i++){
-        let book = {isbn: "ISBN"+i, title: "Title" + i, price: 0.99 * i}
-        springer.books[i] = book
-    }
-    let addison = {name: "Addison", books: [{isbn: "ISBN42", title: "Title42", price: 42.99}]}
-    db.publishing.insertOne(springer)
-    db.publishing.insertOne(addison)
-
+use("training")
+function printCursor(cursor){
+    cursor.forEach((e) => printData(e))
 }
-use ("training")
-db.publishing.drop()
-db.createCollection("publishing")
-createPublishers()
+function printData(data){
+    console.log(JSON.stringify(data))
+}
+
+function findAll(){
+    return db.publishing.find()
+}
+
+let books = findAll()
+
+printCursor(books)
+
