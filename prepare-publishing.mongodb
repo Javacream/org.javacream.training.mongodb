@@ -1,14 +1,23 @@
 function createDocuments(){
-    let springer = {name: "Springer", books: []}
+    let books = []
     for (let i = 0; i < 10; i++){
-        let book = {isbn: "ISBN"+i, title: "Title" + i, price: 0.99 * i, pages: 50*i}
-        springer.books[i] = book
+        let book = {isbn: "ISBN"+i, title: "Title" + i, price: 0.99 * i, pages: 50*i, description: "a book about computer science", authorNames: ["Rainer Sawitzki"]}
+        books.push(book)
     }
-    let addison = {name: "Addison", books: [{isbn: "ISBN42", title: "Title42", price: 42.99}]}
+    let bookForAddison = {isbn: "ISBN42", title: "Title42", price: 42.99, pages: 999, description: "a sports book", authorNames: ["Georg Metzger", "Hans Meier"]};
+    let springer = {name: "Springer", address: {city: "Berlin", street: "Alexanderplatz"}, books: []}
+    let authors = [{lastname: "Sawitzki", firstname: "Rainer", isbns:[]}, {lastname: "Metzger", firstname: "Georg", isbns:[]}, {lastname: "Meier", firstname: "Hans", isbns:[]}]
+    authors[1].isbns.push(bookForAddison.isbn)
+    authors[2].isbns.push(bookForAddison.isbn)
+    books.forEach(e => {springer.books.push(e.isbn); e.publisherName = springer.name; authors[0].isbns.push(e.isbn)})
+    let addison = {name: "Addison", address: {city: "Berlin", street: "Alexanderplatz"}, books: [bookForAddison]}
+    bookForAddison.publisherName = addison.name;    
+    books.push(bookForAddison)
     db.publishing.insertOne(springer)
     db.publishing.insertOne(addison)
-    db.publishing.insertMany(springer.books)
-    db.publishing.insertMany(addison.books)
+    db.publishing.insertMany(books)
+    db.publishing.insertMany(authors)
+
 }
 use ("training")
 db.publishing.drop()
