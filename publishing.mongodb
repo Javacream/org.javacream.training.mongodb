@@ -10,7 +10,15 @@ function findAll(){
     return db.publishing.find()
 }
 
-let books = findAll()
+function findBooks(){
+    return db.publishing.find({isbn: {$exists: true}})
+}
+function findPublishers(){
+    return db.publishing.find({name: {$exists: true}})
+}
 
-printCursor(books)
+
+let documents = findPublishers()
+
+printCursor(documents)
 
