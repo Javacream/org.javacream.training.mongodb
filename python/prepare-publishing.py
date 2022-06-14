@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-from collections import OrderedDict
 import urllib.parse
 
 def get_database():
