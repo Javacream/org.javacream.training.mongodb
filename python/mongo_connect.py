@@ -1,8 +1,6 @@
 from pymongo import MongoClient
 import urllib.parse
 
-import urllib.parse
-
 def get_database():
    username = urllib.parse.quote_plus('root')
    password = urllib.parse.quote_plus('example')
@@ -11,4 +9,16 @@ def get_database():
    client = MongoClient(uri)
    database = client.training
    return database
+
+def print_cursor(cursor):
+    for e in cursor:
+        print_data(e)
+
+def print_data(data):
+    print(data)
+
+
+
+
+
 
