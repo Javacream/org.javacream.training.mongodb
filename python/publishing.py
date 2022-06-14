@@ -1,5 +1,4 @@
-from pymongo import MongoClient
-import urllib.parse
+from mongo_connect import *
 
 def get_database():
    username = urllib.parse.quote_plus('root')
