@@ -18,8 +18,7 @@ def create_schema():
    db.authors.drop()
    db.create_collection("publishers")
    db.create_collection("authors")
-   db.create_collection("books")
-
+   db.create_collection("books",
    validator =  {
       "$jsonSchema": {
          "bsonType": "object",
@@ -49,12 +48,7 @@ def create_schema():
             }
          }
       }
-   }
-   cmd = OrderedDict([('collMod', 'books'),
-            ('validator', validator),
-            ('validationLevel', 'moderate')]
-   )
-   db.command(cmd)
+   })
 
 
 def create_documents():

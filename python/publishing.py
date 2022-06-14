@@ -32,6 +32,9 @@ def find_authors():
     db = get_database()
     return db["authors"].find({"lastname": {"$exists": True}})
 
+def insert_wrong():
+    db = get_database()
+    db.books.insert_one({"name": "Hugo"})
 
 def publisher_books_lookup():
     db = get_database()
@@ -54,4 +57,5 @@ def publisher_books_lookup():
 #print_cursor(publisher_books_lookup())
 #print_cursor(find_books())
 #print_cursor(find_publishers())
-print_cursor(find_authors())
+#print_cursor(find_authors())
+#insert_wrong()
