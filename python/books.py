@@ -14,7 +14,7 @@ def find_book_with_tag(tag):
     return db.books.find({"tags": tag})
 
 search_tags = ["sports", "science"]
-add_tag_to_book("ISBN42", "sports")
+print(add_tag_to_book("ISBN42", "sports").modified_count)
 add_tag_to_book("ISBN42", "science")
 print_cursor(find_book_with_all_tags(search_tags))
 print_cursor(find_book_with_tag("sports"))
