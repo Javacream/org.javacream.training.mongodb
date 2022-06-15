@@ -11,8 +11,17 @@ def create_schema():
    validator =  {
       "$jsonSchema": {
          "bsonType": "object",
-         "required": [ "isbn", "title", "pages", "description", "price" ],
+         "required": [ "isbn", "title", "pages", "description", "price", "version" ],
          "properties": {
+            "publisher": {
+               "bsonType": "objectId",
+               "description": "must be an objectId and is required"
+            },
+            "version": {
+               "bsonType": "int",
+               "description": "must be a long and is required"
+            },
+
             "isbn": {
                "bsonType": "string",
                "description": "must be a string and is required"
@@ -51,29 +60,30 @@ def create_documents():
    db = get_database()
    books = []
    for i in range(1,10):
-      book = {"isbn": "ISBN"+str(i), "title": "Title" + str(i), "price": 0.99 + i, "pages": 50*i, "description": "a book about computer science", "authorName": ["Rainer Sawitzki"]}
+      book = {"version": 0, "isbn": "ISBN"+str(i), "title": "Title" + str(i), "price": 0.99 + i, "pages": 50*i, "description": "a book about computer science", "authorName": ["Rainer Sawitzki"]}
       books.append(book)
-   bookForAddison = {"isbn": "ISBN42", "title": "Title42", "price": 42.99, "pages": 999, "description": "a sports book", "authorName": ["Georg Metzger", "Hans Meier"]};
-   bookForAddison2 = {"isbn": "ISBN43", "title": "Title43", "price": 4.99, "pages": 999, "description": "a sports book", "authorName": ["Georg Metzger", "Hans Meier"]};
-   springer = {"name": "Springer", "address": {"city": "Berlin", "street": "Alexanderplatz"}, "books": []}
-   authors = [{"lastname": "Sawitzki", "firstname": "Rainer", "isbns":[]}, {"lastname": "Metzger", "firstname": "Georg", "isbns":[]}, {"lastname": "Meier", "firstname": "Hans", "isbns":[]}]
+   bookForAddison = {"version": 0, "isbn": "ISBN42", "title": "Title42", "price": 42.99, "pages": 999, "description": "a sports book", "authorName": ["Georg Metzger", "Hans Meier"]};
+   bookForAddison2 = {"version": 0, "isbn": "ISBN43", "title": "Title43", "price": 4.99, "pages": 999, "description": "a sports book", "authorName": ["Georg Metzger", "Hans Meier"]};
+   springer = {"version": 0, "name": "Springer", "address": {"city": "Berlin", "street": "Alexanderplatz"}, "books": []}
+   authors = [{"version": 0, "lastname": "Sawitzki", "firstname": "Rainer", "isbns":[]}, {"lastname": "Metzger", "firstname": "Georg", "isbns":[]}, {"lastname": "Meier", "firstname": "Hans", "isbns":[]}]
    authors[1]["isbns"].append(bookForAddison["isbn"])
    authors[2]["isbns"].append(bookForAddison["isbn"])
    for book in books:
       springer["books"].append(book["isbn"])
       book["publisherName"] = springer["name"]
       authors[0]["isbns"].append(book["isbn"])
-   addison = {"name": "Addison", "address": {"city": "Berlin", "street": "Alexanderplatz"}, "books": [bookForAddison]}
+   addison = {"version": 0, "name": "Addison", "address": {"city": "Berlin", "street": "Alexanderplatz"}, "books": [bookForAddison]}
    bookForAddison["publisherName"] = addison["name"]    
    bookForAddison2["publisherName"] = addison["name"]
    oidsForSpringerBooks = db.books.insert_many(books)
-   oidForAddisonBook = db["books"].insert_many([bookForAddison, bookForAddison2])
+   oidForAddisonBooks = db["books"].insert_many([bookForAddison, bookForAddison2])
    springer["books"] = {"oids": oidsForSpringerBooks.inserted_ids}
-   addison["books"].append({"oids": oidForAddisonBook.inserted_ids})
-   db["publishers"].insert_one(springer)
-   db["publishers"].insert_one(addison)
+   addison["books"] = {"oids": oidForAddisonBooks.inserted_ids}
+   oidForPublisherSpringer = db["publishers"].insert_one(springer)
+   oidForPublisherAddison = db["publishers"].insert_one(addison)
+   db.books.update_many({"_id": {"$in": springer["books"]["oids"]}}, {"$set": {"publisher": oidForPublisherSpringer.inserted_id}})
+   db.books.update_many({"_id": {"$in": addison["books"]["oids"]}}, {"$set": {"publisher": oidForPublisherAddison.inserted_id}})
    db["authors"].insert_many(authors)
-
 
 create_schema()
 create_documents()

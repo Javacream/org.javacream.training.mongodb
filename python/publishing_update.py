@@ -14,6 +14,7 @@ def update_publisher_city():
     print_cursor(db.publishers.find(springer_filter))
 
 def add_book_to_publisher(publisher, book):
+    old_publisher_id = book.publisher
     print(db.publishers.update_one({"_id": publisher["_id"]}, {"$addToSet": {"books.oids": book["_id"]}}).modified_count)
 #update_publisher_address()
 #update_publisher_city()
