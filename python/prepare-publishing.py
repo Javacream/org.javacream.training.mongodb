@@ -34,6 +34,13 @@ def create_schema():
                "bsonType": "double",
                "minimum": 0,
                "description": "must be an double greater than 0 and is required"
+            },
+            "tags": {
+               "bsonType": "array",
+               "description": "if exists must be a string[]",
+               "items": {
+                  "bsonType": "string"
+               }
             }
          }
       }

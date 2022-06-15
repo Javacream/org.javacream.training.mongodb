@@ -13,6 +13,6 @@ def update_publisher_city():
     db.publishers.update_one(springer_filter, {"$set": {"address.city": "Frankfurt"}})
     print_cursor(db.publishers.find(springer_filter))
 
-#update_publisher_address()
-update_publisher_city()
+update_publisher_address()
+#update_publisher_city()
 
