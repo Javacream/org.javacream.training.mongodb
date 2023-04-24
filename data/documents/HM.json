@@ -1,3 +1,4 @@
 {"lastname": "Metzger", 
- "firstname": "Hannah"
+ "firstname": "Hannah", 
+ "books": ["ISBN2", "ISBN3"]
 }
