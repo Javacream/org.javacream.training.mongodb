@@ -1,33 +1,49 @@
 db.publishing.drop()
-let publisher1 = {"name": "Springer", "books": ["ISBN1", "ISBN2"]}
-let publisher2 = {"name": "Addison", "books": ["ISBN3"]}
+let publisher1 = {"name": "Springer", "books": []}
+let publisher2 = {"name": "Addison", "books": []}
 let author1 = {"lastname": "Schneider", 
  "firstname": "Hans", 
- "books": ["ISBN1", "ISBN3"]
+ "books": []
 }
 
 let author2 = {"lastname": "Metzger", 
  "firstname": "Hannah", 
- "books": ["ISBN2", "ISBN3"]
+ "books": []
 }
 
 let book1 = {"isbn": "ISBN1",
  "title": "Title1",
- "publisher": "Springer", 
- "authors": ["HM"]
+ "authors": []
 }
 
 let book2 = {"isbn": "ISBN2",
  "title": "Title2",
- "publisher": "Springer", 
- "authors": ["HM"]
+ "authors": []
 }
 
 let book3 = {"isbn": "ISBN3",
  "title": "Title3", 
- "publisher": "Addison",
- "authors": ["HM", "HS"]
+ "authors": []
 }
 
-db.publishing.insertMany([publisher1, publisher2, author1,author2, book1, book2, book3])
+const publisher1Id = db.publishing.insertOne(publisher1).insertedId
+const publisher2Id = db.publishing.insertOne(publisher2).insertedId
+const author1Id = db.publishing.insertOne(author1).insertedId
+const author2Id = db.publishing.insertOne(author2).insertedId
+const book1Id = db.publishing.insertOne(book1).insertedId
+const book2Id = db.publishing.insertOne(book2).insertedId
+const book3Id = db.publishing.insertOne(book3).insertedId
+
+db.publishing.updateOne({_id: publisher1Id}, {$addToSet: {"books": {$each: [book1Id, book2Id]}}})
+db.publishing.updateOne({_id: publisher2Id}, {$addToSet: {"books": {$each: [book3Id]}}})
+db.publishing.updateOne({_id: author1Id}, {$addToSet: {"books": {$each: [book1Id, book2Id]}}})
+db.publishing.updateOne({_id: author2Id}, {$addToSet: {"books": {$each: [book3Id, book2Id]}}})
+db.publishing.updateOne({_id: book1Id}, {$addToSet: {"authors": {$each: [author1Id]}}, $set: {"publisher": publisher1Id}})
+db.publishing.updateOne({_id: book2Id}, {$addToSet: {"authors": {$each: [author1Id, author2Id]}}, $set: {"publisher": publisher1Id}})
+db.publishing.updateOne({_id: book3Id}, {$addToSet: {"authors": {$each: [author2Id]}}, $set: {"publisher": publisher2Id}})
+
+let springer = db.publishing.findOne({name: "Springer"})
+let bookIds = springer.books
+bookIds.forEach((bookId) => print(bookId))
+//db.publishing.findOne({name: "Springer"})
 

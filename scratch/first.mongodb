@@ -1,3 +1,0 @@
-let book = {isbn:"ISBN3", title:"Title3"}
-db.publishing.insertOne(book)
-db.publishing.find()
