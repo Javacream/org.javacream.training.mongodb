@@ -1,0 +1,94 @@
+function prepare(){
+
+db.publishers_validation.drop()
+db.authors_validation.drop()
+db.books_validation.drop()
+
+db.createCollection("publishers_validation", {
+    validator: {
+        $jsonSchema: {
+         bsonType: "object",
+         title: "Publishers Object Validation",
+         required: [ "name", "books"]
+        }
+    }
+})
+db.createCollection("authors_validation", {
+    validator: {
+        $jsonSchema: {
+         bsonType: "object",
+         title: "Authors Object Validation",
+         required: [ "lastname", "firstname", "books"]
+        }
+    }
+})
+
+db.createCollection("books_validation", {
+    validator: {
+        $jsonSchema: {
+         bsonType: "object",
+         title: "Books Object Validation",
+         required: [ "isbn", "title", "publisher", "authors"]
+        }
+    }
+})
+
+let publisher1 = {"name": "Springer", "books": ["ISBN1", "ISBN2"]}
+let publisher2 = {"name": "Addison", "books": ["ISBN3"]}
+let author1 = {"lastname": "Schneider", 
+ "firstname": "Hans", 
+ "books": ["ISBN1", "ISBN3"]
+}
+
+let author2 = {"lastname": "Metzger", 
+ "firstname": "Hannah", 
+ "books": ["ISBN2", "ISBN3"]
+}
+
+let book1 = {"isbn": "ISBN1",
+ "title": "Title1",
+ "publisher": "Springer", 
+ "authors": ["HM"]
+}
+
+let book2 = {"isbn": "ISBN2",
+ "title": "Title2",
+ "publisher": "Springer", 
+ "authors": ["HM"]
+}
+
+let book3 = {"isbn": "ISBN3",
+ "title": "Title3", 
+ "publisher": "Addison",
+ "authors": ["HM", "HS"]
+}
+
+db.publishers_validation.insertMany([publisher1, publisher2])
+db.authors_validation.insertMany([author1,author2])
+db.books_validation.insertMany([book1, book2, book3])
+
+}
+
+function findByType(type){
+    return db[type].find()
+}
+function findAllPublishers(){
+    return findByType("publishers_validation")
+}
+
+function findAllBooks(){
+    return findByType("books_validation")
+}
+
+function findAllAuthors(){
+    return findByType("authors_validation")
+}
+
+prepare()
+
+findAllAuthors()
+findAllBooks()
+findAllPublishers()
+
+//Invalid
+db.publishers_validation.insertOne({hu: "go"})
