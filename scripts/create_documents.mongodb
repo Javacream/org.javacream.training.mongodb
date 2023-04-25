@@ -1,31 +1,31 @@
 function prepare(){
 
     db.publishing.drop()
-    let publisher1 = {"name": "Springer", "books": []}
-    let publisher2 = {"name": "Addison", "books": []}
+    let publisher1 = {"name": "Springer", "books": [], address: {city: "Berlin", street: "Alexanderplatz"}, type:"Publisher"}
+    let publisher2 = {"name": "Addison", "books": [], address: {city: "New York", steet: "Main Street"}, type:"Publisher"}
     let author1 = {"lastname": "Schneider", 
     "firstname": "Hans", 
-    "books": []
+    "books": [], address: {city: "Berlin", street: "Kuhdamm"}, type:"Author"
     }
 
     let author2 = {"lastname": "Metzger", 
     "firstname": "Hannah", 
-    "books": []
+    "books": [], address: {city: "Berlin", street: "Alexanderplatz"}, type:"Author"
     }
 
     let book1 = {"isbn": "ISBN1",
-    "title": "Title1",
-    "authors": []
+    "title": "Title1", price: 99.99,
+    "authors": [], tags: ["sports", "politics"], type:"Book"
     }
 
     let book2 = {"isbn": "ISBN2",
     "title": "Title2",
-    "authors": []
+    "authors": [], price: 1.99, type:"Book"
     }
 
     let book3 = {"isbn": "ISBN3",
-    "title": "Title3", 
-    "authors": []
+    "title": "Title3", price: 9.99, 
+    "authors": [], tags: ["sports"], type:"Book"
     }
 
     const publisher1Id = db.publishing.insertOne(publisher1).insertedId
@@ -36,8 +36,8 @@ function prepare(){
     const book2Id = db.publishing.insertOne(book2).insertedId
     const book3Id = db.publishing.insertOne(book3).insertedId
 
-    db.publishing.updateOne({_id: publisher1Id}, {$addToSet: {"books": {$each: [book1Id, book2Id]}}})
-    db.publishing.updateOne({_id: publisher2Id}, {$addToSet: {"books": {$each: [book3Id]}}})
+    db.publishing.updateOne({_id: publisher1Id}, {$addToSet: {"books": {$each: [book1Id, book3Id]}}})
+    db.publishing.updateOne({_id: publisher2Id}, {$addToSet: {"books": {$each: [book2Id]}}})
     db.publishing.updateOne({_id: author1Id}, {$addToSet: {"books": {$each: [book1Id, book2Id]}}})
     db.publishing.updateOne({_id: author2Id}, {$addToSet: {"books": {$each: [book3Id, book2Id]}}})
     db.publishing.updateOne({_id: book1Id}, {$addToSet: {"authors": {$each: [author1Id]}}, $set: {"publisher": publisher1Id}})
@@ -50,9 +50,28 @@ function printBookTitlesForPublisher(publisher){
     let bookIds = springer.books
     bookIds.forEach((bookId) => print(db.publishing.findOne({_id: bookId}).title))
 }
+function printExpensiveBooks(){
+    printCursor(db.publishing.find({type: "Book", price: {$gt: 10}}))
+}
 
+function printBooksWrittenbyTwoOrMoreAuthors(){
+    printCursor(db.publishing.find({type: "Book", authors: {$size: 2}}))
+}
+function printBooksWithTags(tag){
+    printCursor(db.publishing.find({type: "Book", tags:tag}))
+}
+function printBerlinDocuments(){
+    printCursor(db.publishing.find({"address.city":"Berlin"}))
+}
+
+function printCursor(cursor){
+    cursor.forEach(data => print(JSON.stringify(data)))
+}
+function printObject(obj){
+    print(JSON.stringify(data))
+}
 prepare()
-print("Springer Books:")
-printBookTitlesForPublisher("Springer")
-print("Addison Books:")
-printBookTitlesForPublisher("Addison")
+//printBooksWithTags("sports")
+//printExpensiveBooks()
+//printBooksWrittenbyTwoOrMoreAuthors()
+printBerlinDocuments()
