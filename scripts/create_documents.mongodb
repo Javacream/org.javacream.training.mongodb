@@ -46,9 +46,11 @@ function prepare(){
 
 }
 function printBookTitlesForPublisher(publisher){
-    let springer = db.publishing.findOne({name: publisher})
-    let bookIds = springer.books
-    bookIds.forEach((bookId) => print(db.publishing.findOne({_id: bookId}).title))
+    // let springer = db.publishing.findOne({name: publisher})
+    // let bookIds = springer.books
+    let bookIds = db.publishing.findOne({name: publisher}, {books: 1, _id: 0}).books
+    bookIds.forEach((bookId) => printObject(db.publishing.findOne({_id: ObjectId(bookId)}, {title:1, _id:0})))
+    //bookIds.forEach((bookId) => printObject(bookId))
 }
 function printExpensiveBooks(){
     printCursor(db.publishing.find({type: "Book", price: {$gt: 10}}))
@@ -68,10 +70,12 @@ function printCursor(cursor){
     cursor.forEach(data => print(JSON.stringify(data)))
 }
 function printObject(obj){
-    print(JSON.stringify(data))
+    print(JSON.stringify(obj))
 }
 prepare()
 //printBooksWithTags("sports")
 //printExpensiveBooks()
 //printBooksWrittenbyTwoOrMoreAuthors()
-printBerlinDocuments()
+//printBerlinDocuments()
+printBookTitlesForPublisher("Springer")
+db.publishing.find({type: "Publisher"})
