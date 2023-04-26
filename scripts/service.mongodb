@@ -19,14 +19,15 @@ const service = {
     },
     deleteBookByIsbn: function(isbn){
         let book = db.publishing.findOne({type: "Book", isbn: isbn})
-        let bookId = book._id
-        let publisherId = book.publisher
-        let authorIds = book.authors
+        if (book){
+            let bookId = book._id
+            let publisherId = book.publisher
+            let authorIds = book.authors
 
-        db.publishing.deleteOne({_id: bookId})
-        db.publishing.updateOne({_id: publisherId}, {$pull: {books: bookId}})
-        authorIds.forEach(authorId => db.publishing.updateOne({_id: authorId}, {$pull: {books: bookId}}))
-    
+            db.publishing.deleteOne({_id: bookId})
+            db.publishing.updateOne({_id: publisherId}, {$pull: {books: bookId}})
+            authorIds.forEach(authorId => db.publishing.updateOne({_id: authorId}, {$pull: {books: bookId}}))
+        }
 
     },
     switchBookPublisher: function(isbn, fromPublisherName, toPublisherName){
@@ -55,8 +56,8 @@ const test = {
         service.deleteBookByIsbn("ISBN1")
         printCursor(db.publishing.find())
     },
-    switchIsbn2FromSpringerToAddison: function(){
-        service.switchBookPublisher("ISBN2", "Springer", "Addison")
+    switchIsbn3FromSpringerToAddison: function(){
+        service.switchBookPublisher("ISBN3", "Springer", "Addison")
         printCursor(db.publishing.find())
     },
 
@@ -75,4 +76,4 @@ print("deleteBookByIsbn:")
 test.deleteIsbn1()
 
 print("switchIsbn2FromSpringerToAddison:")
-//test.switchIsbn2FromSpringerToAddison()
+test.switchIsbn3FromSpringerToAddison()
