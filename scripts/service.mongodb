@@ -36,6 +36,8 @@ const service = {
         let toPublisherId = db.publishing.findOne({type: "Publisher", name: toPublisherName})._id
         db.publishing.updateOne({_id: fromPublisherId}, {$pull: {books: bookId}})
         db.publishing.updateOne({_id: toPublisherId}, {$addToSet: {books: bookId}})
+        db.publishing.updateOne({_id: bookId}, {$set: {publisher: toPublisherId, price:6.66}})
+
     }
 }
 

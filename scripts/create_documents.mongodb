@@ -41,7 +41,7 @@ function prepare(){
     db.publishing.updateOne({_id: author1Id}, {$addToSet: {"books": {$each: [book1Id, book2Id]}}})
     db.publishing.updateOne({_id: author2Id}, {$addToSet: {"books": {$each: [book3Id, book2Id]}}})
     db.publishing.updateOne({_id: book1Id}, {$addToSet: {"authors": {$each: [author1Id]}}, $set: {"publisher": publisher1Id}})
-    db.publishing.updateOne({_id: book2Id}, {$addToSet: {"authors": {$each: [author1Id, author2Id]}}, $set: {"publisher": publisher1Id}})
+    db.publishing.updateOne({_id: book2Id}, {$addToSet: {"authors": {$each: [author1Id, author2Id]}}, $set: {"publisher": publisher2Id}})
     db.publishing.updateOne({_id: book3Id}, {$addToSet: {"authors": {$each: [author2Id]}}, $set: {"publisher": publisher2Id}})
 
 }
