@@ -1,0 +1,78 @@
+function printCursor(cursor){
+    cursor.forEach(data => print(JSON.stringify(data)))
+}
+function printObject(obj){
+    print(JSON.stringify(obj))
+}
+
+const service = {
+    findBooksByTag: function(tag){
+        return db.publishing.find({type: "Book", tags:tag})
+    },
+    findBooksByPriceRange: function(minPrice, maxPrice){
+        return db.publishing.find({type: "Book", price: {$gt: minPrice, $lt: maxPrice}})
+    },
+    findBooksByPublisher: function(publisherName){
+        let bookIds = db.publishing.findOne({type: "Publisher", name: publisherName}, {books: 1, _id: 0}).books
+        return db.publishing.find({_id: {$in: bookIds}})
+
+    },
+    deleteBookByIsbn: function(isbn){
+        let book = db.publishing.findOne({type: "Book", isbn: isbn})
+        let bookId = book._id
+        let publisherId = book.publisher
+        let authorIds = book.authors
+
+        db.publishing.deleteOne({_id: bookId})
+        db.publishing.updateOne({_id: publisherId}, {$pull: {books: bookId}})
+        authorIds.forEach(authorId => db.publishing.updateOne({_id: authorId}, {$pull: {books: bookId}}))
+    
+
+    },
+    switchBookPublisher: function(isbn, fromPublisherName, toPublisherName){
+        let bookId = db.publishing.findOne({type: "Book", isbn: isbn})._id
+        let fromPublisherId = db.publishing.findOne({type: "Publisher", name: fromPublisherName})._id
+        let toPublisherId = db.publishing.findOne({type: "Publisher", name: toPublisherName})._id
+        db.publishing.updateOne({_id: fromPublisherId}, {$pull: {books: bookId}})
+        db.publishing.updateOne({_id: toPublisherId}, {$addToSet: {books: bookId}})
+    }
+}
+
+const test = {
+    springerHasBooks: function(){
+        let books = service.findBooksByPublisher("Springer")
+        printCursor(books)
+    },
+    booksWithTagSports: function(){
+        let books = service.findBooksByTag("sports")
+        printCursor(books)
+    },
+    booksWithPriceBetween1And50: function(){
+        let books = service.findBooksByPriceRange(1, 50)
+        printCursor(books)
+    },
+    deleteIsbn1: function(){
+        service.deleteBookByIsbn("ISBN1")
+        printCursor(db.publishing.find())
+    },
+    switchIsbn2FromSpringerToAddison: function(){
+        service.switchBookPublisher("ISBN2", "Springer", "Addison")
+        printCursor(db.publishing.find())
+    },
+
+}
+print("springerHasBooks:")
+test.springerHasBooks()
+
+print("booksWithTagSports:")
+test.booksWithTagSports()
+
+
+print("booksWithPriceBetween10And50:")
+test.booksWithPriceBetween1And50()
+
+print("deleteBookByIsbn:")
+test.deleteIsbn1()
+
+print("switchIsbn2FromSpringerToAddison:")
+//test.switchIsbn2FromSpringerToAddison()
