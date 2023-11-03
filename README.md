@@ -1,9 +1,8 @@
 ## Organisatorisches
 * Referent: Rainer Sawitzki
 * eMail: rainer.sawitzki@gmail.com
-* [Javacream](http://javacream.org)  
 
-* [Digitales Flipchart)(https://docs.google.com/presentation/d/1rfMW0lj1K5Ma5j2IHBwOIksmIHqwPg1R6LMjtwV7Rvc/edit?usp=sharing)  
+* [Digitales Flipchart](https://docs.google.com/presentation/d/1rfMW0lj1K5Ma5j2IHBwOIksmIHqwPg1R6LMjtwV7Rvc/edit?usp=sharing)  
 
 * Seminarzeiten
   * 8 Unterrichtseinheiten mit jeweils 90 Minuten, 2 Unterrichtseinheiten Nachbesprechung / Workshop
