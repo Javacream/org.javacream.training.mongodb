@@ -7,11 +7,8 @@ function printDocument(doc) {
   console.log(JSON.stringify(doc))
 }
 
+//let criterion = {name: {'$exists': true}}
+//let updateDocument = {'$set': {type: 'Publisher'}}
 
-let criterion = { price: 
-                        { 
-                          '$lte': 2.99
-                        } 
-                }
-
-printCursor(db.data.find(criterion)) //drei Treffer
+//db.data.updateMany(criterion, updateDocument)
+printCursor(db.data.find({type: 'Publisher'}))
