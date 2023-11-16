@@ -15,54 +15,19 @@ function createDocuments(){
     bookForAddison.publisherName = addison.name;    
     bookForAddison2.publisherName = addison.name;    
     //books.push(bookForAddison)
-    let oidsForSpringerBooks = db.books.insertMany(books)
-    let oidForAddisonBook = db.books.insertMany([bookForAddison, bookForAddison2])
+    let oidsForSpringerBooks = db.data.insertMany(books)
+    let oidForAddisonBook = db.data.insertMany([bookForAddison, bookForAddison2])
     springer.books = {oids: Object.values(oidsForSpringerBooks.insertedIds)}
     addison.books.push({oids: Object.values(oidForAddisonBook.insertedIds)})
-    db.publishers.insertOne(springer)
-    db.publishers.insertOne(addison)
-    db.authors.insertMany(authors)
+    db.data.insertOne(springer)
+    db.data.insertOne(addison)
+    db.data.insertMany(authors)
 
 }
 use ("training")
-db.publishers.drop()
-db.books.drop()
-db.authors.drop()
-db.createCollection("publishers")
-db.createCollection("authors")
-db.createCollection("books", 
-
-{
-   validator: {
-      $jsonSchema: {
-         bsonType: "object",
-         required: [ "isbn", "title", "pages", "description", "price" ],
-         properties: {
-            isbn: {
-               bsonType: "string",
-               description: "must be a string and is required"
-            },
-            title: {
-               bsonType: "string",
-               description: "must be a string and is required"
-            },
-            pages: {
-               bsonType: "int",
-               minimum: 0,
-               description: "must be an integer greater than 0 and is required"
-            },
-            description: {
-               bsonType: "string",
-               description: "description must be set"
-            },
-            price: {
-               bsonType: "double",
-               minimum: 0,
-               description: "must be an double greater than 0 and is required"
-            }
-         }
-      }
-   }
-})
+//db.publishers.drop()
+//db.books.drop()
+db.data.drop()
+db.createCollection("data")
 
 createDocuments()

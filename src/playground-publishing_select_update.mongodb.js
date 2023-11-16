@@ -7,4 +7,7 @@ function printDocument(doc){
   console.log(JSON.stringify(doc))
 }
 
-printCursor(db.publishers.find())
+//printCursor(db.publishers.find())
+
+let criterion = {title: "Title2"}
+printCursor(db.data.find(criterion))
