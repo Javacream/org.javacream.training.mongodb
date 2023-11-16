@@ -1,4 +1,5 @@
 use('training')
+db.data.drop()
 
 let sawitzki_document = {
     'lastname': 'Sawitzki', 
@@ -10,5 +11,18 @@ let sawitzki_document = {
     }
  }
 
- db.data.insertOne(sawitzki_document)
+ let meier_document = {
+    'lastname': 'Meier', 
+    'firstname': 'Hannah', 
+    'height': 183,
+    'address': {
+     'city': 'München',
+     'street': 'Marienplatz'
+    }
+ }
+
+
+ db.data.insertMany([sawitzki_document, meier_document])
+
+ db.data.find()
  
